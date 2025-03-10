@@ -10,24 +10,26 @@ import Header from "./header";
 import { LoggedInStatusCard, NotLoggedInStatusCard } from "./login-status-card";
 import SearchSection from "./search-section";
 import Head from "next/head";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import TrackView from "./track-view";
 
 const client = hc<AppType>("/");
 
-export default function UserPage({ params }: { params: { id: string } }) {
+type UserType =
+	| {
+			id: string;
+			name: string | null;
+			image: string | null;
+	  }
+	| undefined;
+
+export default function UserPage() {
 	const { data: session, status } = useSession();
 	const fromUser = session?.user;
 
-	const toUserId = params.id;
-	const [toUser, setToUser] = useState<
-		| {
-				id: string;
-				name: string | null;
-				image: string | null;
-		  }
-		| undefined
-	>(undefined);
+	const params = useParams();
+	const toUserId = params.id as string;
+	const [toUser, setToUser] = useState<UserType>(undefined);
 
 	const modalRef = useRef<HTMLDialogElement | null>(null);
 	const [track, setTrack] = useState<TrackItems[0] | undefined>(undefined);

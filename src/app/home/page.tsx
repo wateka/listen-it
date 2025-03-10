@@ -44,14 +44,14 @@ export default function HomePage() {
 		[userId],
 	);
 
-	const handleAddTracksToPlaylist = useCallback(async () => {
-		const res = await client.api.me.playlist.tracks.$put();
-		if (res.ok) {
-			alert("プレイリストに追加しました！");
-		} else {
-			alert("プレイリストに追加できませんでした。");
-		}
-	}, []);
+	// const handleAddTracksToPlaylist = useCallback(async () => {
+	// 	const res = await client.api.me.playlist.tracks.$put();
+	// 	if (res.ok) {
+	// 		alert("プレイリストに追加しました！");
+	// 	} else {
+	// 		alert("プレイリストに追加できませんでした。");
+	// 	}
+	// }, []);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -113,13 +113,13 @@ export default function HomePage() {
 
 			<h2 className="text-lg mb-4">あなたに届いた曲（最新10件）</h2>
 
-			<button
+			{/* <button
 				type="button"
 				className="block btn btn-accent my-4 rounded-full"
 				onClick={handleAddTracksToPlaylist}
 			>
 				届いた曲をプレイリストに追加する
-			</button>
+			</button> */}
 
 			{tracks === undefined ? (
 				<div className="flex items-center justify-center gap-4 text-sm text-gray-500">

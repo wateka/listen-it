@@ -9,22 +9,26 @@ import { HomeIcon, HouseIcon, SendIcon } from "lucide-react";
 import TrackView from "../track-view";
 import { LoggedInStatusCard } from "../login-status-card";
 import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
 
 const client = hc<AppType>("/");
 
-export default function Page({ params }: { params: { id: string } }) {
+type UserType =
+	| {
+			id: string;
+			name: string | null;
+			image: string | null;
+	  }
+	| undefined;
+
+export default function Page() {
 	const { data: session, status } = useSession();
 	const fromUser = session?.user;
 
-	const toUserId = params.id;
-	const [toUser, setToUser] = useState<
-		| {
-				id: string;
-				name: string | null;
-				image: string | null;
-		  }
-		| undefined
-	>(undefined);
+	const params = useParams();
+	const toUserId = params.id as string;
+
+	const [toUser, setToUser] = useState<UserType>(undefined);
 
 	const [track, setTrack] = useState<TrackItems[0] | undefined>(undefined);
 
