@@ -12,16 +12,16 @@ export const { handlers, auth } = NextAuth(() => {
 		adapter: DrizzleAdapter(db),
 		providers: [
 			Google({
-				clientId: process.env.AUTH_GOOGLE_ID,
-				clientSecret: process.env.AUTH_GOOGLE_SECRET,
+				clientId: process.env.AUTH_GOOGLE_ID!,
+				clientSecret: process.env.AUTH_GOOGLE_SECRET!,
 			}),
 			Spotify({
-				clientId: process.env.AUTH_SPOTIFY_ID,
-				clientSecret: process.env.AUTH_SPOTIFY_SECRET,
+				clientId: process.env.AUTH_SPOTIFY_ID!,
+				clientSecret: process.env.AUTH_SPOTIFY_SECRET!,
 				authorization:
 					"https://accounts.spotify.com/authorize?scope=user-read-email%20playlist-modify-private",
 			}),
 		],
-		secret: process.env.AUTH_SECRET,
+		secret: process.env.AUTH_SECRET!,
 	};
 });

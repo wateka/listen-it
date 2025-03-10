@@ -1,6 +1,6 @@
 export async function getSpotifyToken() {
-	const clientId = process.env.AUTH_SPOTIFY_ID;
-	const clientSecret = process.env.AUTH_SPOTIFY_SECRET;
+	const clientId = process.env.AUTH_SPOTIFY_ID!;
+	const clientSecret = process.env.AUTH_SPOTIFY_SECRET!;
 
 	const base64 = btoa(`${clientId}:${clientSecret}`);
 
