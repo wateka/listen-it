@@ -38,10 +38,6 @@ export default function HomePage() {
 		| undefined
 	>(undefined);
 
-	if (!userId || !tracks) {
-		return <Loading />;
-	}
-
 	const userPagePath = useMemo(
 		() => `https://listen-it.wateka.dev/send/${userId}`,
 		[userId],
@@ -78,6 +74,10 @@ export default function HomePage() {
 		fetchUserData();
 		fetchTracksData();
 	}, []);
+
+	if (!userId || !tracks) {
+		return <Loading />;
+	}
 
 	return (
 		<div>
