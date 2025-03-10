@@ -19,8 +19,8 @@ export async function getSpotifyToken() {
 }
 
 export const refreshSpotifyToken = async (refreshToken: string) => {
-	const clientId = process.env.AUTH_SPOTIFY_ID;
-	const clientSecret = process.env.AUTH_SPOTIFY_SECRET;
+	const clientId = process.env.AUTH_SPOTIFY_ID!;
+	const clientSecret = process.env.AUTH_SPOTIFY_SECRET!;
 
 	const response = await fetch("https://accounts.spotify.com/api/token", {
 		method: "POST",
