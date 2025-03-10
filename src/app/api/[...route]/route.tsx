@@ -153,9 +153,9 @@ const route = app
 		return c.json(user!);
 	})
 	.put("/me/username", async (c) => {
-		const { username } = await c.req.json<{
+		const { username } = (await c.req.json()) as {
 			username: string;
-		}>();
+		};
 
 		await db
 			.update(users)
@@ -166,9 +166,9 @@ const route = app
 		return c.json({ success: true });
 	})
 	.put("/me/image", async (c) => {
-		const { imageUrl } = await c.req.json<{
+		const { imageUrl } = (await c.req.json()) as {
 			imageUrl: string;
-		}>();
+		};
 
 		await db
 			.update(users)
@@ -343,7 +343,7 @@ const route = app
 			.get();
 
 		if (toAppUser?.playlistSpotifyId) {
-			const token = await getSpotifyTokenWithRefresh(toUserId);
+			const token = await getSpotifyTokenWithRefresh(db, toUserId);
 			try {
 				await addTrackToPlaylist(
 					[`spotify:track:${body.spotifyId}`],

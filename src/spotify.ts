@@ -14,7 +14,7 @@ export async function getSpotifyToken() {
 		body: "grant_type=client_credentials",
 	});
 
-	const data = await response.json<{ access_token: string }>();
+	const data = (await response.json()) as { access_token: string };
 	return data.access_token;
 }
 
@@ -41,13 +41,13 @@ export const refreshSpotifyToken = async (refreshToken: string) => {
 		);
 	}
 
-	const data = await response.json<{
+	const data = (await response.json()) as {
 		access_token: string;
 		token_type: string;
 		scope: string;
 		expires_in: number;
 		refresh_token: string;
-	}>();
+	};
 	return data;
 };
 
@@ -143,7 +143,7 @@ export async function createPlaylist(
 			);
 		}
 
-		const data = await response.json<{ id: string }>();
+		const data = (await response.json()) as { id: string };
 		return data.id;
 	} catch (error) {
 		console.error("Error creating playlist:", error);
