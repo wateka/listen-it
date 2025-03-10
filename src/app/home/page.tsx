@@ -10,6 +10,7 @@ import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AlertTriangleIcon, CheckCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/Loading";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -17,11 +18,9 @@ dayjs.locale("ja");
 const client = hc<AppType>("/");
 
 export default function HomePage() {
-	const router = useRouter();
-
 	const [copied, setCopied] = useState(false);
 
-	const [userId, setUserId] = useState("");
+	const [userId, setUserId] = useState<string | undefined>(undefined);
 	const [tracks, setTracks] = useState<
 		| {
 				id: number;
@@ -38,6 +37,10 @@ export default function HomePage() {
 		  }[]
 		| undefined
 	>(undefined);
+
+	if (!userId || !tracks) {
+		return <Loading />;
+	}
 
 	const userPagePath = useMemo(
 		() => `https://listen-it.wateka.dev/send/${userId}`,
