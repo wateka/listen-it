@@ -1,12 +1,11 @@
 /// <reference path="../../../../node_modules/@types/spotify-api/index.d.ts" />
 
-import { type Context, Hono } from "hono";
+import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { db } from "@/db";
 import { tracks, users, appUsers, accounts } from "@/db/schema";
 import { eq, desc, and, inArray } from "drizzle-orm";
 import { auth } from "@/auth";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
 import {
 	getSpotifyToken,
 	createPlaylist,
@@ -343,7 +342,7 @@ const route = app
 			.get();
 
 		if (toAppUser?.playlistSpotifyId) {
-			const token = await getSpotifyTokenWithRefresh(db, toUserId);
+			const token = await getSpotifyTokenWithRefresh(toUserId);
 			try {
 				await addTrackToPlaylist(
 					[`spotify:track:${body.spotifyId}`],
