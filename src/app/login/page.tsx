@@ -2,8 +2,17 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function LogIn() {
+export default function LogInPage() {
+	return (
+		<Suspense>
+			<LogIn />
+		</Suspense>
+	);
+}
+
+function LogIn() {
 	const params = useSearchParams();
 	const callbackUrl = params.get("callback") || "/home";
 
