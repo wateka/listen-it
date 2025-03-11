@@ -38,7 +38,10 @@ export default function Home() {
 						<a href="/login" className="btn btn-lg btn-accent rounded-full">
 							ログイン
 						</a>
-						<a href="?" className="btn btn-lg rounded-full">
+						<a
+							href="/send/3d4deeaf-6502-46e7-be0a-becd20abf100" //wateka(demo)'s page
+							className="btn btn-lg rounded-full"
+						>
 							試しに送ってみる
 						</a>
 					</div>
