@@ -35,6 +35,8 @@
 		"@types/spotify-api": "^0.0.25",
 		"daisyui": "^5.0.0",
 		"drizzle-kit": "^0.30.5",
+		"eslint": "9.22.0",
+		"eslint-config-next": "15.2.2",
 		"tailwindcss": "^4",
 		"typescript": "^5",
 		"wrangler": "^3.114.0"

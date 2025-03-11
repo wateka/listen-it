@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { hc } from "hono/client";
 import type { AppType } from "@/app/api/[...route]/route";
 import TrackView from "../send/[id]/track-view";
@@ -9,7 +9,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AlertTriangleIcon, CheckCircleIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
 
 dayjs.extend(relativeTime);

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, M_PLUS_1 } from "next/font/google";
+import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
 	title: "Listen it, ____!",
-	description: "友達に聴いてほしい曲を、送ろう、送ってもらおう。",
+	description: "友達に聴いてほしい曲を、送ろう。送ってもらおう。",
 };
 
 export default function RootLayout({

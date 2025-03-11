@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
 	return (
 		<div
@@ -35,15 +37,15 @@ export default function Home() {
 						</p>
 					</div>
 					<div className="flex flex-wrap justify-center gap-4">
-						<a href="/login" className="btn btn-lg btn-accent rounded-full">
+						<Link href="/login" className="btn btn-lg btn-accent rounded-full">
 							ログイン
-						</a>
-						<a
+						</Link>
+						<Link
 							href="/send/3d4deeaf-6502-46e7-be0a-becd20abf100" //wateka(demo)'s page
 							className="btn btn-lg rounded-full"
 						>
 							試しに送ってみる
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>

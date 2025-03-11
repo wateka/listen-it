@@ -2,6 +2,7 @@
 
 import Loading from "@/components/Loading";
 import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 
@@ -65,9 +66,9 @@ function LogIn() {
 						</button>
 					</div>
 					<div>
-						<a href="/" className="link text-sm text-gray-500">
+						<Link href="/" className="link text-sm text-gray-500">
 							トップページへ戻る
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>
