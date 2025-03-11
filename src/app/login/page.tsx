@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
@@ -36,6 +37,10 @@ function LogIn() {
 			callbackUrl: `/api/init?callback=${callbackUrl}`,
 		});
 	};
+
+	if (status !== "unauthenticated") {
+		return <Loading />;
+	}
 
 	return (
 		<>
