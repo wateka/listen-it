@@ -1,1 +1,0 @@
-ALTER TABLE `track` ADD `added_to_playlist` integer DEFAULT false NOT NULL;

@@ -25,12 +25,12 @@ export const tracks = sqliteTable("track", {
 		.default(false),
 });
 
-export const appUsers = sqliteTable("app_user", {
+export const spotifyUser = sqliteTable("spotify_user", {
 	id: text("id")
 		.primaryKey()
 		.references(() => users.id),
-	userSpotifyId: text("user_spotify_id"),
-	playlistSpotifyId: text("playlist_spotify_id"),
+	userSpotifyId: text("user_spotify_id").notNull(),
+	playlistSpotifyId: text("playlist_spotify_id").notNull(),
 });
 
 export const logs = sqliteTable("log", {

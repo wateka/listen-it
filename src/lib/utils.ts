@@ -1,6 +1,9 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+export class ErrorWithStatus extends Error {
+	status: number;
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+	constructor(message: string, status: number) {
+		super(message);
+		this.status = status;
+		this.name = this.constructor.name;
+	}
 }

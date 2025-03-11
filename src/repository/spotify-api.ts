@@ -1,10 +1,13 @@
-export async function getSpotifyToken() {
+const SPOTIFY_API_BASE = "https://api.spotify.com/v1";
+const SPOTIFY_AUTH_URL = "https://accounts.spotify.com/api/token";
+
+// クライアントトークン取得
+export async function getSpotifyClientToken() {
 	const clientId = process.env.AUTH_SPOTIFY_ID!;
 	const clientSecret = process.env.AUTH_SPOTIFY_SECRET!;
-
 	const base64 = btoa(`${clientId}:${clientSecret}`);
 
-	const response = await fetch("https://accounts.spotify.com/api/token", {
+	const response = await fetch(SPOTIFY_AUTH_URL, {
 		method: "POST",
 		headers: {
 			Authorization: `Basic ${base64}`,
@@ -14,19 +17,24 @@ export async function getSpotifyToken() {
 		body: "grant_type=client_credentials",
 	});
 
+	if (!response.ok) {
+		throw new Error(
+			`Failed to get client token: ${response.status} ${await response.text()}`,
+		);
+	}
+
 	const data = (await response.json()) as { access_token: string };
 	return data.access_token;
 }
 
-export const refreshSpotifyToken = async (refreshToken: string) => {
+// リフレッシュトークン取得
+export async function getSpotifyAccessToken(refreshToken: string) {
 	const clientId = process.env.AUTH_SPOTIFY_ID!;
 	const clientSecret = process.env.AUTH_SPOTIFY_SECRET!;
 
-	const response = await fetch("https://accounts.spotify.com/api/token", {
+	const response = await fetch(SPOTIFY_AUTH_URL, {
 		method: "POST",
-		headers: {
-			"Content-Type": "application/x-www-form-urlencoded",
-		},
+		headers: { "Content-Type": "application/x-www-form-urlencoded" },
 		body: new URLSearchParams({
 			grant_type: "refresh_token",
 			refresh_token: refreshToken,
@@ -37,21 +45,69 @@ export const refreshSpotifyToken = async (refreshToken: string) => {
 
 	if (!response.ok) {
 		throw new Error(
-			`"Failed to refresh access token": ${await response.text()}`,
+			`Failed to refresh access token: ${response.status} ${await response.text()}`,
 		);
 	}
 
-	const data = (await response.json()) as {
+	return response.json() as Promise<{
 		access_token: string;
 		token_type: string;
 		scope: string;
 		expires_in: number;
 		refresh_token: string;
-	};
-	return data;
-};
+	}>;
+}
 
-export async function addTrackToPlaylist(
+// Spotifyの曲検索
+export async function getSpotifyTracks(query: string, accessToken: string) {
+	const q = encodeURIComponent(query);
+
+	const response = await fetch(
+		`${SPOTIFY_API_BASE}/search?q=${q}&type=track&limit=10&market=JP`,
+		{
+			method: "GET",
+			headers: { Authorization: `Bearer ${accessToken}` },
+		},
+	);
+
+	if (!response.ok) {
+		throw new Error(
+			`Failed to get Spotify tracks: ${response.status} ${await response.text()}`,
+		);
+	}
+
+	const data = (await response.json()) as SpotifyApi.TrackSearchResponse;
+	return data.tracks.items;
+}
+
+// プレイリスト作成
+export async function insertSpotifyPlaylist(
+	spotifyUserId: string,
+	accessToken: string,
+) {
+	const response = await fetch(
+		`${SPOTIFY_API_BASE}/users/${spotifyUserId}/playlists`,
+		{
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ name: "Listen it! Playlist", public: false }),
+		},
+	);
+
+	if (!response.ok) {
+		throw new Error(
+			`Failed to create playlist: ${response.status} ${response.statusText}`,
+		);
+	}
+
+	const data = (await response.json()) as { id: string };
+	return data.id;
+}
+
+export async function insertTracksToSpotifyPlaylist(
 	trackIds: string[],
 	playlistId: string,
 	accessToken: string,
@@ -86,6 +142,7 @@ export async function addTrackToPlaylist(
 	}
 }
 
+// プレイリスト存在確認
 export async function checkPlaylistExists(
 	playlistId: string,
 	accessToken: string,
@@ -113,40 +170,5 @@ export async function checkPlaylistExists(
 	} catch (error) {
 		console.error("Error checking playlist existence:", error);
 		return false; // Assume playlist doesn't exist in case of an error
-	}
-}
-
-const playlistName = "Listen it! Playlist";
-export async function createPlaylist(
-	spotifyUserId: string,
-	accessToken: string,
-) {
-	try {
-		const response = await fetch(
-			`https://api.spotify.com/v1/users/${spotifyUserId}/playlists`,
-			{
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					name: playlistName,
-					public: false,
-				}),
-			},
-		);
-
-		if (!response.ok) {
-			throw new Error(
-				`Failed to create playlist: ${response.status} ${response.statusText}`,
-			);
-		}
-
-		const data = (await response.json()) as { id: string };
-		return data.id;
-	} catch (error) {
-		console.error("Error creating playlist:", error);
-		throw error;
 	}
 }

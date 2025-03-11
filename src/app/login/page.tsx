@@ -2,7 +2,7 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 
 export default function LogInPage() {
 	return (
@@ -19,9 +19,11 @@ function LogIn() {
 	const { status } = useSession();
 	const router = useRouter();
 
-	if (status === "authenticated") {
-		router.push(callbackUrl);
-	}
+	useEffect(() => {
+		if (status === "authenticated") {
+			router.push(callbackUrl);
+		}
+	}, [status, callbackUrl, router]);
 
 	const handleGoogleLogin = async () => {
 		await signIn("google", {
