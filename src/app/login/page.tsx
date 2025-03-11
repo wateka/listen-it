@@ -70,6 +70,28 @@ function LogIn() {
 							トップページへ戻る
 						</Link>
 					</div>
+					<div className="mt-8 text-sm text-gray-500 flex flex-col gap-2">
+						<p>
+							Spotify API の審査前のため、 Spotify ログインでは
+							<strong>正しくログインされなかったり</strong>、
+							<strong>プレイリストの作成/追加がうまく動かない</strong>
+							可能性があります。
+						</p>
+						<p>
+							その場合は、Spotify API のアクセス可能リストに追加しますので、
+							<a
+								href="https://bsky.app/profile/wateka.bsky.social"
+								className="link"
+							>
+								Bluesky
+							</a>
+							や
+							<a href="https://mixi.social/@wateka" className="link">
+								mixi2
+							</a>
+							など、なんらかの方法で wateka (開発者) にご連絡ください。
+						</p>
+					</div>
 				</div>
 			</div>
 		</>
