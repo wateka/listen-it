@@ -20,9 +20,9 @@ export default function Home() {
 					</div>
 					<div className="mb-6">
 						<p className="flex flex-wrap justify-center mb-4">
-							<span>友達からおすすめされた曲、</span>
+							<span>「友達からおすすめされた曲、</span>
 							<span>あとで聴こうと思ったけれど、</span>
-							<span>そのまま忘れてしまう……。</span>
+							<span>そのまま忘れてしまう……。」</span>
 						</p>
 						<p className="flex flex-wrap justify-center mb-4">
 							<span>このサイトを使えば、</span>
