@@ -10,22 +10,38 @@ export default function Home() {
 			<div className="hero-content text-neutral-content text-center">
 				<div className="max-w-lg">
 					<h1 className="mb-6 text-5xl">Listen it, ____!</h1>
-					<div className="mb-6">
-						<p className="mb-2">
-							友達の聴いてほしい曲を、あなたのプレイリストに送ってもらおう！
-						</p>
-						<p className="mb-2">
-							送り先のリンクを友達と共有すると、友達は Listen it!
-							上で曲を検索して、あなたに送ることができます。
-						</p>
-						<p className="mb-2">
-							友達に送ってもらった曲は、ボタン一つであなたの Spotify
-							プレイリストに追加することができます。
+					<div className="mb-8">
+						<p className="flex flex-wrap justify-center text-xl">
+							<span>友達に聴いてほしい曲を、</span>
+							<span>送ろう。送ってもらおう。</span>
 						</p>
 					</div>
-					<a href="/login" className="btn btn-lg btn-accent rounded-full">
-						使ってみる
-					</a>
+					<div className="mb-6">
+						<p className="flex flex-wrap justify-center mb-4">
+							<span>友達からおすすめされた曲、</span>
+							<span>あとで聴こうと思ったけれど、</span>
+							<span>そのまま忘れてしまう……。</span>
+						</p>
+						<p className="flex flex-wrap justify-center mb-4">
+							<span>このサイトを使えば、</span>
+							<span>友達のおすすめ曲がそのまま、</span>
+							<span>あなたのSpotify プレイリストに入ります！</span>
+						</p>
+						<p className="flex flex-wrap justify-center mb-12">
+							<span>送り先のリンクを友達と共有しておけば、</span>
+							<span>Spotify をやっていない友達でも、</span>
+							<span>いつでも、このサイトで曲を検索して、</span>
+							<span>あなたに送ることができます。</span>
+						</p>
+					</div>
+					<div className="flex flex-wrap justify-center gap-4">
+						<a href="/login" className="btn btn-lg btn-accent rounded-full">
+							ログイン
+						</a>
+						<a href="?" className="btn btn-lg rounded-full">
+							試しに送ってみる
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
