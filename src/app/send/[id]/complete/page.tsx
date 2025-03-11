@@ -29,8 +29,10 @@ export default function Page() {
 	const toUserId = params.id as string;
 
 	const [toUser, setToUser] = useState<UserType>(undefined);
+	const [trackLoading, setTrackLoading] = useState(true);
 
 	const [track, setTrack] = useState<TrackItems[0] | undefined>(undefined);
+	const [toUserLoading, setToUserLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -43,6 +45,7 @@ export default function Page() {
 			} else {
 				console.error("Failed to fetch user data");
 			}
+			setToUserLoading(false);
 		};
 
 		const fetchLatestTrack = async () => {
@@ -55,13 +58,14 @@ export default function Page() {
 				const track = await res.json();
 				setTrack(track);
 			}
+			setTrackLoading(false);
 		};
 
 		fetchUserData();
 		fetchLatestTrack();
 	}, [toUserId]);
 
-	if (status === "loading") {
+	if (status === "loading" || trackLoading || toUserLoading) {
 		return <Loading />;
 	}
 
