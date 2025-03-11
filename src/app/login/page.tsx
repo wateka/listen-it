@@ -29,7 +29,7 @@ function LogIn() {
 
 	const handleGoogleLogin = async () => {
 		await signIn("google", {
-			callbackUrl,
+			callbackUrl: `/api/init?callback=${callbackUrl}`,
 		});
 	};
 

@@ -43,7 +43,7 @@ app.use(async (c, next) => {
 
 const route = app
 	.get("/init", async (c) => {
-		const callbackUrl = c.req.param("callback") || "/home";
+		const callbackUrl = c.req.query("callback") || "/home";
 
 		try {
 			const _playlistId = await fetchOrCreateUserPlaylistId(c.var.userId);
