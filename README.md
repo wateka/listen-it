@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Listen it, ____!
 
-## Getting Started
+このアプリは、友達の聴いてほしい曲を、自分の Spotify プレイリストに直接送ってもらうためのアプリです。
 
-First, run the development server:
+Spotify ユーザではない友達も、このアプリ上で曲を検索してあなたに送るだけで、簡単にあなたの Spotify プレイリストに曲を追加できます。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+「おすすめされた曲を、つい聴き忘れてしまう」という方におすすめのアプリです。
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 技術スタック
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- TypeScript
+- React & Next.js (フロントエンド)
+- Auth.js (Google & Spotify 認証)
+- Spotify API
+- Tailwind CSS & Daisy UI
+- Hono & Hono RPC (バックエンド)
+- Drizzle ORM
+- Turso (SQLite データベース)
+- Vercel (ホスティング)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 機能紹介
 
-## Learn More
+https://listen-it.wateka.dev から、利用することができます。
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Spotify でログインして、送り先のURLを友達に共有する
+   ![マイページのスクリーンショット。送り先のURLが表示されている。](./docs/images/1-url.png)
+2. 友達に、URL を開いてもらって、そこから曲を送ってもらう
+   ![友達に送ったURLの遷移先のスクリーンショット。検索欄と、楽曲の検索結果リストが表示されており、各検索結果アイテムの右隣には「送る」ボタンが用意されている。](./docs/images/2-1-select.png)
+   ![上の画面で「送る」ボタンをクリックしたあとの画面の遷移先。選んだ曲を送って良いか、確認画面が表示されている。](./docs/images/2-2-send.png)
+3. あなたの Spotify プレイリストに、自動で曲が入ります！
