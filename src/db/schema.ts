@@ -129,12 +129,3 @@ export const authenticators = sqliteTable(
 		}),
 	}),
 );
-
-export const credentialAccounts = sqliteTable("credential_account", {
-	id: integer("id").primaryKey(),
-	email: text("email").notNull().unique(),
-	hashedPassword: text("hashed_password").notNull(),
-	userId: text("user_id")
-		.notNull()
-		.references(() => users.id, { onDelete: "cascade" }),
-});

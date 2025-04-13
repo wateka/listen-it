@@ -39,14 +39,8 @@ function LogIn() {
 		});
 	};
 
-	const handleCredentialLogin = async () => {
-		const email = window.prompt("Email:");
-		const password = window.prompt("Password:");
-		if (!email || !password) return;
-
-		await signIn("custom-credentials", {
-			email,
-			password,
+	const handleAuth0Login = async () => {
+		await signIn("auth0", {
 			callbackUrl: `/api/init?callback=${callbackUrl}`,
 		});
 	};
@@ -83,7 +77,7 @@ function LogIn() {
 						</Link>
 						<button
 							type="button"
-							onClick={handleCredentialLogin}
+							onClick={handleAuth0Login}
 							className="btn btn-link text-gray-500 font-normal"
 						>
 							開発者用ログイン

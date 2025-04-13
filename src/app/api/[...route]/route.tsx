@@ -31,6 +31,8 @@ app.use(async (c, next) => {
 		return await next();
 	}
 
+	console.log(c.req.raw.headers);
+
 	const session = await auth();
 
 	console.log(session);

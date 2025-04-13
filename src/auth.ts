@@ -1,12 +1,11 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Spotify from "next-auth/providers/spotify";
-import CredentialsProvider from "next-auth/providers/credentials";
+import Auth0 from "next-auth/providers/auth0";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/db";
 import { accounts, users } from "./db/schema";
 import { and, eq } from "drizzle-orm";
-import { logInWithCredential } from "./service/user-service";
 
 export const { handlers, auth } = NextAuth(() => {
 	return {
@@ -26,31 +25,10 @@ export const { handlers, auth } = NextAuth(() => {
 				authorization:
 					"https://accounts.spotify.com/authorize?scope=user-read-email%20playlist-modify-private",
 			}),
-			CredentialsProvider({
-				id: "custom-credentials",
-				name: "CustomCredentials",
-				credentials: {
-					email: { label: "Email", type: "text" },
-					password: { label: "Password", type: "password" },
-				},
-				async authorize(credentials) {
-					const { email, password } = credentials as {
-						email: string;
-						password: string;
-					};
-					if (!email || !password) return null;
-
-					try {
-						const user = await logInWithCredential(email, password);
-						return {
-							id: user.userId,
-							email: user.email,
-						};
-					} catch (err) {
-						console.error("Credential login failed:", err);
-						return null;
-					}
-				},
+			Auth0({
+				clientId: process.env.AUTH0_ID!,
+				clientSecret: process.env.AUTH0_SECRET!,
+				issuer: process.env.AUTH0_ISSUER_ID!,
 			}),
 		],
 		callbacks: {
