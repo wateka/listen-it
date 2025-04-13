@@ -15,6 +15,13 @@
       "when": 1741688542432,
       "tag": "0001_sturdy_george_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1744554940347,
+      "tag": "0002_illegal_maverick",
+      "breakpoints": true
     }
   ]
 }
