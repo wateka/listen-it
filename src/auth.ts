@@ -65,6 +65,10 @@ export const { handlers, auth } = NextAuth(() => {
 					return false;
 				}
 
+				if (account.provider === "custom-credentials") {
+					return true;
+				}
+
 				const userExistsOnDB_0or1 = await db.$count(
 					users,
 					eq(users.id, user.id),

@@ -31,7 +31,14 @@ app.use(async (c, next) => {
 		return await next();
 	}
 
-	const session = await auth();
+	const reqWithCookie = new Request(c.req.url, {
+		headers: c.req.raw.headers,
+		method: c.req.method,
+	});
+
+	const session = await auth(reqWithCookie as any);
+
+	console.log(session);
 	if (!session?.user?.id) {
 		console.log("Not authenticated, from app.use");
 		return c.text("Not authenticated", 401);

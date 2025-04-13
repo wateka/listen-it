@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { credentialAccounts, users } from "@/db/schema";
+import { accounts, credentialAccounts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function createCredentialUser(
@@ -20,6 +20,13 @@ export async function createCredentialUser(
 		email,
 		hashedPassword,
 		userId,
+	});
+
+	await db.insert(accounts).values({
+		userId: userId,
+		provider: "custom-credentials",
+		providerAccountId: email,
+		type: "email",
 	});
 }
 
