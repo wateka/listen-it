@@ -39,6 +39,18 @@ function LogIn() {
 		});
 	};
 
+	const handleCredentialLogin = async () => {
+		const email = window.prompt("Email:");
+		const password = window.prompt("Password:");
+		if (!email || !password) return;
+
+		await signIn("custom-credentials", {
+			email,
+			password,
+			callbackUrl: `/api/init?callback=${callbackUrl}`,
+		});
+	};
+
 	if (status !== "unauthenticated") {
 		return <Loading />;
 	}
@@ -65,10 +77,17 @@ function LogIn() {
 							Google でログイン
 						</button>
 					</div>
-					<div>
+					<div className="flex flex-col items-center">
 						<Link href="/" className="link text-sm text-gray-500">
 							トップページへ戻る
 						</Link>
+						<button
+							type="button"
+							onClick={handleCredentialLogin}
+							className="btn btn-link text-gray-500 font-normal"
+						>
+							開発者用ログイン
+						</button>
 					</div>
 					<div className="mt-8 text-sm text-gray-500 flex flex-col gap-2">
 						<p>
