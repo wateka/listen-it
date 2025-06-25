@@ -113,15 +113,7 @@ export default function HomePage() {
 				</div>
 			</div>
 
-			<h2 className="text-lg mb-4">あなたに届いた曲（最新10件）</h2>
-
-			{/* <button
-				type="button"
-				className="block btn btn-accent my-4 rounded-full"
-				onClick={handleAddTracksToPlaylist}
-			>
-				届いた曲をプレイリストに追加する
-			</button> */}
+			<h2 className="text-lg mb-4">あなたに届いた曲（最新20件）</h2>
 
 			{tracks === undefined ? (
 				<div className="flex items-center justify-center gap-4 text-sm text-gray-500">

@@ -32,6 +32,7 @@ export async function getSentTracksByUserId(
 	return await db
 		.select()
 		.from(tracks)
+		.leftJoin(users, eq(users.id, tracks.toUserId))
 		.where(eq(tracks.fromUserId, senderUserId))
 		.orderBy(desc(tracks.createdAt))
 		.limit(limit);

@@ -16,6 +16,7 @@ import {
 	addTrackToUser,
 	fetchLastSentTrack,
 	fetchReceivedTracks,
+	fetchSentTracks,
 } from "@/service/track-service";
 
 type HonoBinding = {
@@ -90,6 +91,10 @@ const route = app
 	})
 	.get("/me/received-tracks", async (c) => {
 		const tracks = await fetchReceivedTracks(c.var.userId);
+		return c.json(tracks);
+	})
+	.get("/me/sent-tracks", async (c) => {
+		const tracks = await fetchSentTracks(c.var.userId);
 		return c.json(tracks);
 	})
 	.get("/me/last-sent-track", async (c) => {

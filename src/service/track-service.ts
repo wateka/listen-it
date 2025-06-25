@@ -3,13 +3,14 @@ import {
 	getLastSentTrackBySenderAndReceiverUserId,
 	getReceivedTracksByUserId,
 	getUnaddedTracksByUserId,
+	getSentTracksByUserId,
 	insertTrack,
 } from "@/repository/track-repo";
 import { fetchSpotifyAccessTokenWithRefreshing } from "./account-service";
 import { insertTracksToSpotifyPlaylist } from "@/repository/spotify-api";
 
 export async function fetchReceivedTracks(userId: string) {
-	const LIMIT = 10;
+	const LIMIT = 20;
 	const tracks = await getReceivedTracksByUserId(userId, LIMIT);
 	return tracks.map(({ track, user }) => ({
 		...track,
@@ -76,4 +77,14 @@ export async function addTrackToUser(
 		createdAt: new Date(),
 		addedToPlaylist,
 	});
+}
+
+export async function fetchSentTracks(userId: string) {
+	const LIMIT = 20;
+	const tracks = await getSentTracksByUserId(userId, LIMIT);
+	return tracks.map(({ track, user }) => ({
+		...track,
+		toUserName: user?.name,
+		toUserImage: user?.image,
+	}));
 }
