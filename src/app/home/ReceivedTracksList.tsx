@@ -49,13 +49,34 @@ function ReceivedTrackItem({ track }: { track: ReceivedTrack }) {
   );
 }
 
-export default function ReceivedTracksList({ tracks }: { tracks: ReceivedTrack[] }) {
+// props拡張: onLoadMore, loading, hasMore
+export default function ReceivedTracksList({ tracks, onLoadMore, loading, hasMore }: {
+  tracks: ReceivedTrack[];
+  onLoadMore?: () => void;
+  loading?: boolean;
+  hasMore?: boolean;
+}) {
   return (
     <div>
       {tracks.length === 0 ? (
         <div className="text-gray-500">まだ曲が届いていません。</div>
       ) : (
-        tracks.map((track) => <ReceivedTrackItem key={track.id} track={track} />)
+        <>
+          {tracks.map((track) => <ReceivedTrackItem key={track.id} track={track} />)}
+          {hasMore ? (
+            <div className="flex justify-center my-4">
+              <button
+                className="btn rounded-full"
+                onClick={onLoadMore}
+                disabled={loading}
+              >
+                {loading ? "読み込み中..." : "もっと表示する"}
+              </button>
+            </div>
+          ) : (
+            <div className="text-center text-sm text-gray-400 my-4">これで届いた曲はすべてです</div>
+          )}
+        </>
       )}
     </div>
   );

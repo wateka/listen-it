@@ -91,13 +91,13 @@ const route = app
 		return c.json({ success: true });
 	})
 	.get("/me/received-tracks", async (c) => {
-		const limit = parseInt(c.req.query("limit") ?? "20", 10);
+		const limit = parseInt(c.req.query("limit") ?? "10", 10);
 		const offset = parseInt(c.req.query("offset") ?? "0", 10);
 		const tracks = await fetchReceivedTracks(c.var.userId, limit, offset);
 		return c.json(tracks);
 	})
 	.get("/me/sent-tracks", async (c) => {
-		const limit = parseInt(c.req.query("limit") ?? "20", 10);
+		const limit = parseInt(c.req.query("limit") ?? "10", 10);
 		const offset = parseInt(c.req.query("offset") ?? "0", 10);
 		const tracks = await fetchSentTracks(c.var.userId, limit, offset);
 		return c.json(tracks);
@@ -143,7 +143,7 @@ const route = app
 		return c.json({ success: true });
 	})
 	.get("/me/recent-sent-users", async (c) => {
-		const limit = parseInt(c.req.query("limit") ?? "20", 10);
+		const limit = parseInt(c.req.query("limit") ?? "10", 10);
 		const users = await fetchRecentSentUsers(c.var.userId, limit);
 		return c.json(users);
 	});

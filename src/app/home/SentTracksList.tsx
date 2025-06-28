@@ -41,13 +41,43 @@ function SentTrackItem({ track }: { track: SentTrack }) {
   );
 }
 
-export default function SentTracksList({ tracks }: { tracks: SentTrack[] }) {
+// props拡張: onLoadMore, loading, hasMore
+export default function SentTracksList({
+  tracks,
+  onLoadMore,
+  loading,
+  hasMore,
+}: {
+  tracks: SentTrack[];
+  onLoadMore?: () => void;
+  loading?: boolean;
+  hasMore?: boolean;
+}) {
   return (
     <div>
       {tracks.length === 0 ? (
         <div className="text-gray-500">まだ送った曲がありません。</div>
       ) : (
-        tracks.map((track) => <SentTrackItem key={track.id} track={track} />)
+        <>
+          {tracks.map((track) => (
+            <SentTrackItem key={track.id} track={track} />
+          ))}
+          {hasMore ? (
+            <div className="flex justify-center my-4">
+              <button
+                className="btn rounded-full"
+                onClick={onLoadMore}
+                disabled={loading}
+              >
+                {loading ? "読み込み中..." : "もっと表示する"}
+              </button>
+            </div>
+          ) : (
+            <div className="text-center text-gray-400 my-4">
+              これで送った曲はすべてです
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -16,9 +16,17 @@ const client = hc<AppType>("/");
 
 export default function HomePage() {
 	const [userId, setUserId] = useState<string | undefined>(undefined);
-	const [receivedTracks, setReceivedTracks] = useState<ReceivedTrack[] | undefined>(undefined);
-	const [sentTracks, setSentTracks] = useState<SentTrack[] | undefined>(undefined);
+	const [receivedTracks, setReceivedTracks] = useState<ReceivedTrack[]>([]);
+	const [sentTracks, setSentTracks] = useState<SentTrack[]>([]);
 	const [recentSentUsers, setRecentSentUsers] = useState<RecentSentUser[] | undefined>(undefined);
+
+	const [receivedOffset, setReceivedOffset] = useState(0);
+	const [receivedLoading, setReceivedLoading] = useState(false);
+	const [receivedHasMore, setReceivedHasMore] = useState(true);
+
+	const [sentOffset, setSentOffset] = useState(0);
+	const [sentLoading, setSentLoading] = useState(false);
+	const [sentHasMore, setSentHasMore] = useState(true);
 
 	const searchParams = useSearchParams();
 	const router = useRouter();
@@ -40,20 +48,28 @@ export default function HomePage() {
 			}
 		};
 
-		const fetchTracksData = async () => {
-			const res = await client.api.me["received-tracks"].$get();
+		const fetchReceived = async () => {
+			setReceivedLoading(true);
+			const res = await client.api.me["received-tracks"].$get({ query: { limit: 10, offset: 0 } });
 			if (res.ok) {
 				const tracks = await res.json();
 				setReceivedTracks(tracks);
+				setReceivedOffset(tracks.length);
+				setReceivedHasMore(tracks.length === 10);
 			}
+			setReceivedLoading(false);
 		};
 
-		const fetchSentTracksData = async () => {
-			const res = await client.api.me["sent-tracks"].$get();
+		const fetchSent = async () => {
+			setSentLoading(true);
+			const res = await client.api.me["sent-tracks"].$get({ query: { limit: 10, offset: 0 } });
 			if (res.ok) {
-				const sentTracks = await res.json();
-				setSentTracks(sentTracks);
+				const tracks = await res.json();
+				setSentTracks(tracks);
+				setSentOffset(tracks.length);
+				setSentHasMore(tracks.length === 10);
 			}
+			setSentLoading(false);
 		};
 
 		const fetchRecentSentUsers = async () => {
@@ -65,16 +81,42 @@ export default function HomePage() {
 		};
 
 		fetchUserData();
-		fetchTracksData();
-		fetchSentTracksData();
+		fetchReceived();
+		fetchSent();
 		fetchRecentSentUsers();
 	}, []);
+
+	// もっと表示: 受信
+	const handleLoadMoreReceived = async () => {
+		setReceivedLoading(true);
+		const res = await client.api.me["received-tracks"].$get({ query: { limit: 10, offset: receivedOffset } });
+		if (res.ok) {
+			const tracks = await res.json();
+			setReceivedTracks((prev) => [...prev, ...tracks]);
+			setReceivedOffset((prev) => prev + tracks.length);
+			setReceivedHasMore(tracks.length === 10);
+		}
+		setReceivedLoading(false);
+	};
+
+	// もっと表示: 送信
+	const handleLoadMoreSent = async () => {
+		setSentLoading(true);
+		const res = await client.api.me["sent-tracks"].$get({ query: { limit: 10, offset: sentOffset } });
+		if (res.ok) {
+			const tracks = await res.json();
+			setSentTracks((prev) => [...prev, ...tracks]);
+			setSentOffset((prev) => prev + tracks.length);
+			setSentHasMore(tracks.length === 10);
+		}
+		setSentLoading(false);
+	};
 
 	const handleTabChange = (nextTab: "received" | "sent") => {
 		router.push(`?tab=${nextTab}`);
 	};
 
-	if (!userId || !receivedTracks || !sentTracks) {
+	if (!userId || receivedTracks === undefined || sentTracks === undefined) {
 		return <Loading />;
 	}
 
@@ -92,8 +134,13 @@ export default function HomePage() {
 				<div className="tab-content mt-4">
 					<ShareCard userPagePath={userPagePath} />
 
-					<h2 className="text-lg mb-4">あなたに届いた曲（最新20件）</h2>
-					<ReceivedTracksList tracks={receivedTracks} />
+					<h2 className="text-lg mb-4">あなたに届いた曲</h2>
+					<ReceivedTracksList
+						tracks={receivedTracks}
+						onLoadMore={handleLoadMoreReceived}
+						loading={receivedLoading}
+						hasMore={receivedHasMore}
+					/>
 				</div>
 
 				<input
@@ -105,14 +152,16 @@ export default function HomePage() {
 					onChange={() => handleTabChange("sent")}
 				/>
 				<div className="tab-content mt-4">
-					{/* <div className="card border border-gray-300 shadow-sm p-4 mb-8"> */}
-						<h2 className="text-lg mb-1">最近曲を送った友達</h2>
-						<p className="text-sm text-gray-500 mb-2">クリックすると、もう一度曲を送れます！</p>
-						{recentSentUsers ? <RecentSentUsers users={recentSentUsers} /> : <div className="mb-6">Loading...</div>}
-					{/* </div> */}
-					
-					<h2 className="text-lg mb-4">あなたが送った曲（最新20件）</h2>
-					<SentTracksList tracks={sentTracks} />
+					<h2 className="text-lg mb-1">最近曲を送った友達</h2>
+					<p className="text-sm text-gray-500 mb-2">クリックすると、もう一度曲を送れます！</p>
+					{recentSentUsers ? <RecentSentUsers users={recentSentUsers} /> : <div className="mb-6">Loading...</div>}
+					<h2 className="text-lg mb-4">あなたが送った曲</h2>
+					<SentTracksList
+						tracks={sentTracks}
+						onLoadMore={handleLoadMoreSent}
+						loading={sentLoading}
+						hasMore={sentHasMore}
+					/>
 				</div>
 			</div>
 		</div>
