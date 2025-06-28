@@ -134,7 +134,7 @@ export default function HomePage() {
 				<div className="tab-content mt-4">
 					<ShareCard userPagePath={userPagePath} />
 
-					<h2 className="text-lg mb-4">あなたに届いた曲</h2>
+					<h2 className="text-xl mb-4">あなたに届いた曲</h2>
 					<ReceivedTracksList
 						tracks={receivedTracks}
 						onLoadMore={handleLoadMoreReceived}
@@ -152,10 +152,10 @@ export default function HomePage() {
 					onChange={() => handleTabChange("sent")}
 				/>
 				<div className="tab-content mt-4">
-					<h2 className="text-lg mb-1">最近曲を送った友達</h2>
+					<h2 className="text-xl mb-1">最近曲を送った友達</h2>
 					<p className="text-sm text-gray-500 mb-2">クリックすると、もう一度曲を送れます！</p>
 					{recentSentUsers ? <RecentSentUsers users={recentSentUsers} /> : <div className="mb-6">Loading...</div>}
-					<h2 className="text-lg mb-4">あなたが送った曲</h2>
+					<h2 className="text-xl mb-4">あなたが送った曲</h2>
 					<SentTracksList
 						tracks={sentTracks}
 						onLoadMore={handleLoadMoreSent}
