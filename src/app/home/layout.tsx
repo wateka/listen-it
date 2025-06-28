@@ -19,7 +19,7 @@ export default async function HomeLayout({
 
 	return (
 		<>
-			<header className="navbar border-2 border-b border-gray-200">
+			<header className="navbar border-b-2 border-gray-200">
 				<div className="w-full max-w-screen-sm flex justify-between items-center mx-auto">
 					<h1 className="flex-1">
 						<Link href="/home" className="btn btn-ghost btn-lg">
