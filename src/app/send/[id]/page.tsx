@@ -11,7 +11,7 @@ import { LoggedInStatusCard, NotLoggedInStatusCard } from "./login-status-card";
 import SearchSection from "./search-section";
 import Head from "next/head";
 import { useParams, useRouter } from "next/navigation";
-import TrackView from "./track-view";
+import TrackView from "@/components/track-view";
 
 const client = hc<AppType>("/");
 

@@ -1,10 +1,12 @@
-import { and, eq, desc, inArray } from "drizzle-orm";
+import { and, eq, desc } from "drizzle-orm";
 import { db } from "@/db";
 import { tracks, users } from "@/db/schema";
 
+// 受信トラック一覧（ページネーション用）
 export async function getReceivedTracksByUserId(
 	receiverUserId: string,
 	limit: number,
+	offset: number,
 ) {
 	return await db
 		.select()
@@ -12,9 +14,27 @@ export async function getReceivedTracksByUserId(
 		.leftJoin(users, eq(users.id, tracks.fromUserId))
 		.where(eq(tracks.toUserId, receiverUserId))
 		.orderBy(desc(tracks.createdAt))
-		.limit(limit);
+		.limit(limit)
+		.offset(offset);
 }
 
+// 送信トラック一覧（ページネーション用）
+export async function getSentTracksByUserId(
+	senderUserId: string,
+	limit: number,
+	offset: number,
+) {
+	return await db
+		.select()
+		.from(tracks)
+		.leftJoin(users, eq(users.id, tracks.toUserId))
+		.where(eq(tracks.fromUserId, senderUserId))
+		.orderBy(desc(tracks.createdAt))
+		.limit(limit)
+		.offset(offset);
+}
+
+// 未追加トラック一覧
 export async function getUnaddedTracksByUserId(userId: string, limit: number) {
 	return await db
 		.select()
@@ -25,19 +45,24 @@ export async function getUnaddedTracksByUserId(userId: string, limit: number) {
 		.limit(limit);
 }
 
-export async function getSentTracksByUserId(
-	senderUserId: string,
-	limit: number,
-) {
+// 最近送ったユーザー一覧
+export async function getRecentSentUsersByUserId(senderUserId: string, limit: number) {
 	return await db
-		.select()
+		.select({
+			toUserId: tracks.toUserId,
+			name: users.name,
+			image: users.image,
+			latestCreatedAt: tracks.createdAt,
+		})
 		.from(tracks)
-		.leftJoin(users, eq(users.id, tracks.toUserId))
+		.innerJoin(users, eq(users.id, tracks.toUserId))
 		.where(eq(tracks.fromUserId, senderUserId))
 		.orderBy(desc(tracks.createdAt))
+		.groupBy(tracks.toUserId)
 		.limit(limit);
 }
 
+// 送信者・受信者ごとの最新1件取得
 export async function getLastSentTrackBySenderAndReceiverUserId(
 	senderUserId: string,
 	receiverUserId: string,
@@ -56,13 +81,7 @@ export async function getLastSentTrackBySenderAndReceiverUserId(
 		.get();
 }
 
-export async function updateTracksAsAddedToPlaylist(trackIds: string[]) {
-	await db
-		.update(tracks)
-		.set({ addedToPlaylist: true })
-		.where(inArray(tracks.spotifyId, trackIds));
-}
-
+// トラック追加
 export async function insertTrack(trackData: {
 	spotifyId: string;
 	spotifyUrl: string;

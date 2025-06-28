@@ -3,53 +3,31 @@
 import { useEffect, useMemo, useState } from "react";
 import { hc } from "hono/client";
 import type { AppType } from "@/app/api/[...route]/route";
-import TrackView from "../send/[id]/track-view";
-
-import dayjs from "dayjs";
-import "dayjs/locale/ja";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { AlertTriangleIcon, CheckCircleIcon } from "lucide-react";
 import Loading from "@/components/Loading";
-
-dayjs.extend(relativeTime);
-dayjs.locale("ja");
+import ShareCard from "./ShareCard";
+import ReceivedTracksList, { ReceivedTrack } from "./ReceivedTracksList";
+import SentTracksList, { SentTrack } from "./SentTracksList";
+import React from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import RecentSentUsers, { RecentSentUser } from "./RecentSentUsers";
 
 const client = hc<AppType>("/");
 
 export default function HomePage() {
-	const [copied, setCopied] = useState(false);
-
 	const [userId, setUserId] = useState<string | undefined>(undefined);
-	const [tracks, setTracks] = useState<
-		| {
-				id: number;
-				spotifyId: string;
-				spotifyUrl: string;
-				name: string;
-				artistName: string;
-				image: string | null;
-				fromUserId: string;
-				fromUserName: string | null | undefined;
-				fromUserImage: string | null | undefined;
-				addedToPlaylist: boolean;
-				createdAt: string;
-		  }[]
-		| undefined
-	>(undefined);
+	const [receivedTracks, setReceivedTracks] = useState<ReceivedTrack[] | undefined>(undefined);
+	const [sentTracks, setSentTracks] = useState<SentTrack[] | undefined>(undefined);
+	const [recentSentUsers, setRecentSentUsers] = useState<RecentSentUser[] | undefined>(undefined);
+
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const tab = searchParams.get("tab") ?? "received";
 
 	const userPagePath = useMemo(
 		() => `https://listen-it.wateka.dev/send/${userId}`,
 		[userId],
 	);
-
-	// const handleAddTracksToPlaylist = useCallback(async () => {
-	// 	const res = await client.api.me.playlist.tracks.$put();
-	// 	if (res.ok) {
-	// 		alert("プレイリストに追加しました！");
-	// 	} else {
-	// 		alert("プレイリストに追加できませんでした。");
-	// 	}
-	// }, []);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -66,93 +44,77 @@ export default function HomePage() {
 			const res = await client.api.me["received-tracks"].$get();
 			if (res.ok) {
 				const tracks = await res.json();
-				setTracks(tracks);
+				setReceivedTracks(tracks);
+			}
+		};
+
+		const fetchSentTracksData = async () => {
+			const res = await client.api.me["sent-tracks"].$get();
+			if (res.ok) {
+				const sentTracks = await res.json();
+				setSentTracks(sentTracks);
+			}
+		};
+
+		const fetchRecentSentUsers = async () => {
+			const res = await client.api.me["recent-sent-users"].$get();
+			if (res.ok) {
+				const users = await res.json();
+				setRecentSentUsers(users);
 			}
 		};
 
 		fetchUserData();
 		fetchTracksData();
+		fetchSentTracksData();
+		fetchRecentSentUsers();
 	}, []);
 
-	if (!userId || !tracks) {
+	const handleTabChange = (nextTab: "received" | "sent") => {
+		router.push(`?tab=${nextTab}`);
+	};
+
+	if (!userId || !receivedTracks || !sentTracks) {
 		return <Loading />;
 	}
 
 	return (
 		<div>
-			<div className="card border border-gray-300 shadow-sm p-4 mb-8">
-				<h2 className="text-lg mb-2">友達に曲を送ってもらおう！</h2>
-				<p className="text-gray-500 text-sm mb-4">
-					以下のURLを友達に共有すると、そこから曲を送ってもらえます。
-				</p>
+			<div className="tabs tabs-border">
+				<input
+					type="radio"
+					name="home_tabs"
+					className="tab"
+					aria-label="受け取る"
+					checked={tab === "received"}
+					onChange={() => handleTabChange("received")}
+				/>
+				<div className="tab-content mt-4">
+					<ShareCard userPagePath={userPagePath} />
 
-				<div className="join rounded-box rounded-md">
-					<input
-						type="text"
-						disabled
-						className="join-item input w-full"
-						value={userPagePath}
-					/>
-					<button
-						type="button"
-						className="join-item btn"
-						onClick={async () => {
-							navigator.clipboard.writeText(userPagePath);
-							setCopied(true);
-						}}
-					>
-						{copied ? (
-							<span className="flex items-center gap-2 text-green-700">
-								<CheckCircleIcon className="w-4 h-4" />
-								コピー
-							</span>
-						) : (
-							<span>コピー</span>
-						)}
-					</button>
+					<h2 className="text-lg mb-4">あなたに届いた曲（最新20件）</h2>
+					<ReceivedTracksList tracks={receivedTracks} />
+				</div>
+
+				<input
+					type="radio"
+					name="home_tabs"
+					className="tab"
+					aria-label="送る"
+					checked={tab === "sent"}
+					onChange={() => handleTabChange("sent")}
+				/>
+				<div className="tab-content mt-4">
+					{/* <div className="card border border-gray-300 shadow-sm p-4 mb-8"> */}
+						<h2 className="text-lg mb-1">最近曲を送った友達</h2>
+						<p className="text-sm text-gray-500 mb-2">クリックすると、もう一度曲を送れます！</p>
+						{recentSentUsers ? <RecentSentUsers users={recentSentUsers} /> : <div className="mb-6">Loading...</div>}
+					{/* </div> */}
+					
+					<h2 className="text-lg mb-4">あなたが送った曲（最新20件）</h2>
+					<SentTracksList tracks={sentTracks} />
 				</div>
 			</div>
-
-			<h2 className="text-lg mb-4">あなたに届いた曲（最新20件）</h2>
-
-			{tracks === undefined ? (
-				<div className="flex items-center justify-center gap-4 text-sm text-gray-500">
-					<div className="loading loading-dots" />
-					読み込み中
-				</div>
-			) : (
-				tracks.map((track) => (
-					<div key={track.id} className="mb-8">
-						<div className="flex items-center">
-							<img
-								src={track.fromUserImage || ""}
-								alt="Sender user icon"
-								className="rounded-full w-8 h-8"
-							/>
-							<span className="ml-2">{track.fromUserName}</span>
-							<span className="ml-2 text-gray-500">さんから</span>
-							<span className="text-sm text-gray-500">
-								・{dayjs(track.createdAt).fromNow()}
-							</span>
-							<span className="ml-2 flex items-center">
-								{track.addedToPlaylist ? (
-									<span className="tooltip" data-tip="プレイリストに追加済み">
-										<CheckCircleIcon className="w-4 h-4 text-green-600" />
-									</span>
-								) : (
-									<span className="tooltip" data-tip="プレイリストに未追加">
-										<AlertTriangleIcon className="w-4 h-4 text-yellow-600" />
-									</span>
-								)}
-							</span>
-						</div>
-
-						<div className="ml-4">
-							<TrackView track={track} />
-						</div>
-					</div>
-				))
-			)}
 		</div>
 	);
 }
