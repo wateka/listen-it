@@ -27,9 +27,6 @@ export default function MenuDropdown({ userImageUrl, userName }: { userImageUrl:
           <Link href="/home" onClick={handleClose}>ホーム</Link>
         </li>
         <li>
-          <Link href="/home/history" onClick={handleClose}>送った曲の履歴</Link>
-        </li>
-        <li>
           <Link href="/home/settings" onClick={handleClose}>ユーザ設定</Link>
         </li>
         <li>
