@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import Header from "../header";
 import { HomeIcon, SendIcon } from "lucide-react";
-import TrackView from "../track-view";
+import TrackView from "@/components/track-view";
 import { LoggedInStatusCard } from "../login-status-card";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";

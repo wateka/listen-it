@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { hc } from "hono/client";
 import type { AppType } from "@/app/api/[...route]/route";
-import TrackView from "../../send/[id]/track-view";
+import TrackView from "@/components/track-view";
 
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
